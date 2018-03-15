@@ -1276,3 +1276,42 @@ Caused by: org.springframework.data.mapping.PropertyReferenceException: No prope
 16:26:41,955  WARN HqlSqlWalker:992 - [DEPRECATION] Encountered positional parameter near line 1, column 64 in HQL: [delete from com.itcast.bos.domain.base.Standard   where name = ?].  Positional parameter are considered deprecated; use named parameters or JPA-style positional parameters instead.
 16:26:42,743  INFO GenericApplicationContext:960 - Closing org.springframework.context.support.GenericApplicationContext@d44fc21: startup date [Wed Mar 14 16:26:34 CST 2018]; root of context hierarchy
 16:26:42,760  INFO LocalContainerEntityManagerFactoryBean:462 - Closing JPA EntityManagerFactory for persistence unit 'default'
+20:50:16,452  INFO DefaultTestContextBootstrapper:259 - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+20:50:16,898  INFO DefaultTestContextBootstrapper:185 - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@33f88ab, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@27a8c74e, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@2d8f65a4, org.springframework.test.context.support.DirtiesContextTestExecutionListener@1b68ddbd, org.springframework.test.context.transaction.TransactionalTestExecutionListener@646d64ab, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@59e5ddf]
+20:50:18,420  INFO XmlBeanDefinitionReader:317 - Loading XML bean definitions from class path resource [applicationContext.xml]
+20:50:19,960  INFO GenericApplicationContext:578 - Refreshing org.springframework.context.support.GenericApplicationContext@5bfbf16f: startup date [Thu Mar 15 20:50:19 CST 2018]; root of context hierarchy
+20:50:20,379  INFO AutowiredAnnotationBeanPostProcessor:153 - JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+20:50:20,604  INFO MLog:80 - MLog clients using log4j logging.
+20:50:22,468  INFO C3P0Registry:204 - Initializing c3p0-0.9.1.2 [built 21-May-2007 15:04:56; debug? true; trace: 10]
+20:50:22,858  INFO LocalContainerEntityManagerFactoryBean:339 - Building JPA container EntityManagerFactory for persistence unit 'default'
+20:50:22,859  WARN HibernatePersistence:41 - HHH015016: Encountered a deprecated javax.persistence.spi.PersistenceProvider [org.hibernate.ejb.HibernatePersistence]; use [org.hibernate.jpa.HibernatePersistenceProvider] instead.
+20:50:22,898  INFO LogHelper:31 - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+20:50:23,604  INFO Version:37 - HHH000412: Hibernate Core {5.0.7.Final}
+20:50:23,606  INFO Environment:213 - HHH000206: hibernate.properties not found
+20:50:23,609  INFO Environment:317 - HHH000021: Bytecode provider name : javassist
+20:50:24,626  INFO Version:66 - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+20:50:25,176  INFO AbstractPoolBackedDataSource:462 - Initializing c3p0 pool... com.mchange.v2.c3p0.ComboPooledDataSource [ acquireIncrement -> 3, acquireRetryAttempts -> 30, acquireRetryDelay -> 1000, autoCommitOnClose -> false, automaticTestTable -> null, breakAfterAcquireFailure -> false, checkoutTimeout -> 0, connectionCustomizerClassName -> null, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, dataSourceName -> 31sr579ubkn3icdc2ois|63a270c9, debugUnreturnedConnectionStackTraces -> false, description -> null, driverClass -> oracle.jdbc.driver.OracleDriver, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, identityToken -> 31sr579ubkn3icdc2ois|63a270c9, idleConnectionTestPeriod -> 0, initialPoolSize -> 3, jdbcUrl -> jdbc:oracle:thin:@192.168.145.100:1521:ORCL, maxAdministrativeTaskTime -> 0, maxConnectionAge -> 0, maxIdleTime -> 0, maxIdleTimeExcessConnections -> 0, maxPoolSize -> 15, maxStatements -> 0, maxStatementsPerConnection -> 0, minPoolSize -> 3, numHelperThreads -> 3, numThreadsAwaitingCheckoutDefaultUser -> 0, preferredTestQuery -> null, properties -> {user=******, password=******}, propertyCycle -> 0, testConnectionOnCheckin -> false, testConnectionOnCheckout -> false, unreturnedConnectionTimeout -> 0, usesTraditionalReflectiveProxies -> false ]
+20:50:25,928  INFO Dialect:156 - HHH000400: Using dialect: org.hibernate.dialect.Oracle10gDialect
+20:50:26,337  INFO LobCreatorBuilderImpl:124 - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+20:50:27,559  INFO SchemaUpdate:105 - HHH000228: Running hbm2ddl schema update
+20:50:28,776  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_ARCHIVE
+20:50:29,189  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_AREA
+20:50:29,375  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_COURIER
+20:50:29,475  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_FIXED_AREA
+20:50:29,545  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_FIXEDAREA_COURIER
+20:50:29,691  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_STANDARD
+20:50:29,814  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_SUB_ARCHIVE
+20:50:29,980  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_SUB_AREA
+20:50:30,097  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_TAKE_TIME
+20:50:30,296  INFO InformationExtractorJdbcDatabaseMetaDataImpl:365 - HHH000262: Table not found: T_VEHICLE
+20:50:33,417  INFO QueryTranslatorFactoryInitiator:47 - HHH000397: Using ASTQueryTranslatorFactory
+20:50:33,637  WARN HqlSqlWalker:992 - [DEPRECATION] Encountered positional parameter near line 1, column 69 in HQL: [update com.itcast.bos.domain.base.Courier set deltag = 1 where id = ?].  Positional parameter are considered deprecated; use named parameters or JPA-style positional parameters instead.
+20:50:33,751  WARN HqlSqlWalker:992 - [DEPRECATION] Encountered positional parameter near line 1, column 53 in HQL: [from com.itcast.bos.domain.base.Standard where name=? and maxLength = ?].  Positional parameter are considered deprecated; use named parameters or JPA-style positional parameters instead.
+20:50:33,752  WARN HqlSqlWalker:992 - [DEPRECATION] Encountered positional parameter near line 1, column 71 in HQL: [from com.itcast.bos.domain.base.Standard where name=? and maxLength = ?].  Positional parameter are considered deprecated; use named parameters or JPA-style positional parameters instead.
+20:50:33,760  WARN HqlSqlWalker:992 - [DEPRECATION] Encountered positional parameter near line 1, column 65 in HQL: [update from com.itcast.bos.domain.base.Standard set maxLength = ? where name = ?].  Positional parameter are considered deprecated; use named parameters or JPA-style positional parameters instead.
+20:50:33,762  WARN HqlSqlWalker:992 - [DEPRECATION] Encountered positional parameter near line 1, column 80 in HQL: [update from com.itcast.bos.domain.base.Standard set maxLength = ? where name = ?].  Positional parameter are considered deprecated; use named parameters or JPA-style positional parameters instead.
+20:50:33,858  WARN HqlSqlWalker:992 - [DEPRECATION] Encountered positional parameter near line 1, column 64 in HQL: [delete from com.itcast.bos.domain.base.Standard   where name = ?].  Positional parameter are considered deprecated; use named parameters or JPA-style positional parameters instead.
+20:50:34,602  INFO GenericApplicationContext:960 - Closing org.springframework.context.support.GenericApplicationContext@5bfbf16f: startup date [Thu Mar 15 20:50:19 CST 2018]; root of context hierarchy
+20:50:34,606  INFO LocalContainerEntityManagerFactoryBean:462 - Closing JPA EntityManagerFactory for persistence unit 'default'

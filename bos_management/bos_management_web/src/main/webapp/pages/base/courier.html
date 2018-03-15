@@ -54,6 +54,10 @@
 			function doRestore(){
 				alert("将取派员还原...");
 			}
+			function openSearchWindow(){
+				$("#searchWindow").window("open");
+			}
+			
 			//工具栏
 			var toolbar = [ {
 				id : 'button-add',	
@@ -75,7 +79,13 @@
 				text : '还原',
 				iconCls : 'icon-save',
 				handler : doRestore
-			}];
+			},{
+				id : 'button-search',
+				text : '搜索',
+				iconCls : 'icon-search',
+				handler : openSearchWindow
+			}
+			];
 			// 定义列
 			var columns = [ [ {
 				field : 'id',
@@ -150,6 +160,7 @@
 				align : 'center'
 			} ] ];
 			
+			//一打开页面就从数据库查找数据，加载
 			$(function(){
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
@@ -164,7 +175,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/courier.json",
+					url : "../../courierAction_pageQuery.action",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow
@@ -196,32 +207,47 @@
 					$("#standardForm").submit();
 				}
 			}
-		//一打开页面就从数据库查找数据，加载
-		$(function() {
-		// 先将body隐藏，再显示，不会出现页面刷新效果
-		$("body").css({
-			visibility : "visible"
-		});
-
-		// 收派标准信息表格
-		$('#grid').datagrid({
-			iconCls : 'icon-forward',
-			fit : true,
-			border : false,
-			rownumbers : true,
-			striped : true,
-			pageList : [ 30, 50, 100 ],
-			pagination : true,
-			toolbar : toolbar,
-			url : "../../courierAction_pageQuery.action",
-			idField : 'id',
-			columns : columns
-		});
-	});
+		
+		
 		
 			
 			
 			
+		</script>
+		<script type="text/javascript">
+		
+		// 将form表单中input节点的数据转为json
+		$.fn.serializeJson = function() {
+		var serializeObj = {};
+		var array = this.serializeArray();
+		var str = this.serialize();
+		$(array).each(
+				function() {
+					if (serializeObj[this.name]) {
+						if ($.isArray(serializeObj[this.name])) {
+							serializeObj[this.name].push(this.value);
+						} else {
+							serializeObj[this.name] = [
+									serializeObj[this.name], this.value ];
+						}
+					} else {
+						serializeObj[this.name] = this.value;
+					}
+				});
+		return serializeObj;
+	};
+	
+	
+	
+		
+		//按照条件查询快递员
+		function doSearch(){
+			// 把form表单中input节点的name的值和用户输入的内容,拼接成json字符串
+			var result=$("#searchForm").serializeJson()
+			
+			//让datagrid重新发起请求
+			$('#grid').datagrid('load', result); 
+		}
 		</script>
 		
 		
@@ -335,7 +361,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2"><a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
+							<td colspan="2"><a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()">查询</a> </td>
 						</tr>
 					</table>
 				</form>

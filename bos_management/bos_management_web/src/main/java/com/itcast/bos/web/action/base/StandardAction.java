@@ -37,7 +37,7 @@ import com.opensymphony.xwork2.ModelDriven;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class standardAction extends ActionSupport implements ModelDriven<Standard> {
+public class StandardAction extends ActionSupport implements ModelDriven<Standard> {
     
     private Standard standard;
     
