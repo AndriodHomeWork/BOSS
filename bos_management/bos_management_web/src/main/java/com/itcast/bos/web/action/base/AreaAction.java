@@ -29,6 +29,7 @@ import org.springframework.stereotype.Controller;
 
 import com.itcast.bos.domain.base.Area;
 import com.itcast.bos.service.AreaService;
+import com.itcast.bos.web.action.CommonAction;
 import com.itcast.utils.PinYin4jUtils;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -45,15 +46,11 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class AreaAction extends ActionSupport implements ModelDriven<Area> {
-    
-    private Area model = new Area();
-    @Override
-    public Area getModel() {
-          
-        return model;
+public class AreaAction extends CommonAction<Area> {
+    public AreaAction() {
+        super(Area.class);  
     }
-    
+
     // 使用属性驱动获取用户上传的文件
     private File file;
     
@@ -126,44 +123,20 @@ public class AreaAction extends ActionSupport implements ModelDriven<Area> {
     }
     
     
-    //属性驱动
-     private int page;
-    
-     private int rows;
-    
-     public void setPage(int page) {
-        this.page = page;
-    }
-    
-     public void setRows(int rows) {
-        this.rows = rows;
-    }
+  
      
     @Action(value="areaAction_pageQuery")
     public String pageQuery() throws IOException {
+     
         Pageable pageable = new PageRequest(page-1, rows);
         Page<Area> page = areaService.findAll(pageable);
      
-     // 总数据条数
-        long total = page.getTotalElements();
-      // 当前页要实现的内容
-        List<Area> list = page.getContent();
-     
-     // 封装数据
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("total", total);
-        map.put("rows", list);
-       
+   
         // 灵活控制输出的内容
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"subareas"});
-
-        String json = JSONObject.fromObject(map, jsonConfig).toString();
-System.out.println(json);
-        // 在实际开发的时候,为了提高服务器的性能,把前台页面不需要的数据都应该忽略掉
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(json);
+        
+        page2json(page, jsonConfig);
         return NONE;
     }
 

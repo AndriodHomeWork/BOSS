@@ -25,6 +25,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.itcast.bos.domain.base.Standard;
 import com.itcast.bos.service.StandardService;
+import com.itcast.bos.web.action.CommonAction;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -37,46 +38,27 @@ import com.opensymphony.xwork2.ModelDriven;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class StandardAction extends ActionSupport implements ModelDriven<Standard> {
+public class StandardAction extends CommonAction<Standard> {
     
-    private Standard standard;
-    
-    public Standard getStandard() {
-        return standard;
+    public StandardAction() {
+        super(Standard.class);
     }
+    
+    
 
-    @Override
-    public Standard getModel() {
-          
-       if(standard == null) {
-           standard = new Standard();
-       }
-        return standard;
-    }
-    
     @Autowired
     private StandardService standardService;
     
     @Action(value = "standardAction_save", results = {@Result(name = "success",
             location = "/pages/base/standard.html", type = "redirect")})
     public String save() {
-        standardService.save(standard);
+        standardService.save(getModel());//TODO
         
         return SUCCESS;
     }
     
     
-    //使用属性驱动获得数据
-    private int page;//第几页
-    private int rows;//每页显示几条数据
     
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-   public void setRows(int rows) {
-       this.rows = rows;
-   }
     
     
     // AJAX请求不需要跳转页面
@@ -85,30 +67,12 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
         // EasyUI的页码是从1开始的
         // SPringDataJPA的页码是从0开始的
         // 所以要-1
+        
+        
         Pageable pageable =new PageRequest(page-1,rows);//TODO
         Page<Standard> page = standardService.findAll(pageable);
         
-        
-        // 总数据条数
-        long total = page.getTotalElements();
-        // 当前页要实现的内容
-        List<Standard> list = page.getContent();
-        
-        // 封装数据
-        Map<String, Object> map = new HashMap<>();
-        
-        map.put("total", total);
-        map.put("rows", list);
-        
-        // JSONObject : 封装对象或map集合
-        // JSONArray : 数组,list集合
-        // 把对象转化为json字符串
-        String json = JSONObject.fromObject(map).toString();
-        
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(json);
-        
+        page2json(page, null);
         return NONE;
     }
     
@@ -120,10 +84,13 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
      // 获取页面的数据
         List<Standard> list = page.getContent();
      // 转换数据为json并传回页面
-        String json = JSONArray.fromObject(list).toString();
+       
+      /*  String json = JSONArray.fromObject(list).toString();
         HttpServletResponse response = ServletActionContext.getResponse();
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(json);
+        */
+        list2json(list, null);
         return NONE;
     }
     
