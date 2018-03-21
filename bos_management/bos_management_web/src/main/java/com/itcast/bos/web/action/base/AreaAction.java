@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -140,5 +141,30 @@ public class AreaAction extends CommonAction<Area> {
         return NONE;
     }
 
+    private String q;
+
+    public void setQ(String q) {
+        this.q = q;
+    }
+    
+    @Action(value = "areaAction_findAll")
+    public String findAll() throws IOException {
+        List<Area> list;
+        
+        if(StringUtils.isNotEmpty(q)) {
+            // 根据用户输入的条件进行模糊匹配
+            list = areaService.findQ(q);
+        }else {
+            //查询所有
+            Page<Area> page=areaService.findAll(null);
+            list=page.getContent();
+        }
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"subareas"});
+        list2json(list, jsonConfig);
+        return null;
+        
+    }
 }
   
