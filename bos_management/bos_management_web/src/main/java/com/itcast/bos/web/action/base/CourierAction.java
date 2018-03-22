@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import com.itcast.bos.domain.base.Courier;
 import com.itcast.bos.domain.base.Standard;
 import com.itcast.bos.service.CourierService;
+import com.itcast.bos.web.action.CommonAction;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -46,28 +47,25 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class CourierAction extends ActionSupport implements ModelDriven<Courier>{
+public class CourierAction extends CommonAction<Courier>{
     
-    private Courier model = new Courier();
-   
-
-    @Override
-    public Courier getModel() {
+    public CourierAction() {
           
-        return model;
+        super(Courier.class);  
+        
     }
-    
+
     @Autowired
     private CourierService courierService;
 
     @Action(value = "courierAction_save", results = {@Result(name = "success",
             location = "/pages/base/courier.html", type = "redirect")})
     public String save() {
-        courierService.save(model);
+        courierService.save(getModel());
         return SUCCESS;
     }
     
-  //使用属性驱动获得数据
+  /*//使用属性驱动获得数据
     private int page;
     private int rows;
 
@@ -77,7 +75,7 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
 
     public void setRows(int rows) {
         this.rows = rows;
-    }
+    }*/
     
     @Action(value="courierAction_pageQuery")
     public String pageQuery() throws IOException {
@@ -111,10 +109,10 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
                 @Override
                 public Predicate toPredicate(Root<Courier> root,
                         CriteriaQuery<?> query, CriteriaBuilder cb) {
-                    String courierNum = model.getCourierNum();
-                    String company = model.getCompany();
-                    String type = model.getType();
-                    Standard standard = model.getStandard();
+                    String courierNum = getModel().getCourierNum();
+                    String company = getModel().getCompany();
+                    String type = getModel().getType();
+                    Standard standard = getModel().getStandard();
                     // 存储条件的集合
                     List<Predicate> list= new ArrayList();
                     if(StringUtils.isNotEmpty(courierNum)) {
@@ -196,6 +194,58 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
         courierService.batchDel(ids);
         return SUCCESS;
     }
+    
+   // 查询所有的在职的快递员
+    //方法二
+    @Action(value ="courierAction_listajax")
+    public String listajax() throws IOException {
+        List<Courier> list = courierService.findAvaible();
+        
+        JsonConfig jsonconfig = new JsonConfig();
+        jsonconfig.setExcludes(new String[] {"fixedAreas"});
+        list2json(list, jsonconfig);
+        
+        return NONE;
+    }
+    
+    //方法一
+    /*
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * */
+    @Action(value = "courierAction_findAvalible")
+    public String findAvalible() throws IOException {
+        Specification<Courier> specification = new Specification<Courier>() {
+
+            @Override
+            public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query,
+                    CriteriaBuilder cb) {
+                  
+             // 查找作废标记等于null的快递员
+                return cb.isNull(root.get("deltag").as(Character.class));
+
+            }};
+            
+            Page<Courier> page = courierService.findAll(specification, null);
+
+            List<Courier> list = page.getContent();
+
+            JsonConfig jsonConfig = new JsonConfig();
+            // 指定在生成json数据的时候要忽略的字段
+            jsonConfig.setExcludes(new String[] { "fixedAreas"});
+
+            list2json(list, jsonConfig);
+
+        return NONE;
+    }
+    
+    
+    
     
    
 }

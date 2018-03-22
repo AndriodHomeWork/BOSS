@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import com.itcast.bos.crm.domain.Customer;
+import com.itcast.bos.domain.base.Courier;
 import com.itcast.bos.domain.base.FixedArea;
 import com.itcast.bos.service.FixedAreaService;
 import com.itcast.bos.web.action.CommonAction;
@@ -120,6 +121,26 @@ public class FixedAreaAction  extends CommonAction<FixedArea>{
         .query("customerIds",customerIds)          //选择客户ID
         .put(null);
 
+        return SUCCESS;
+    }
+    
+    // 使用属性驱动获取快递员和时间的ID
+    private Long courierId;
+    private Long takeTimeId; 
+    
+    public void setCourierId(Long courierId) {
+        this.courierId = courierId;
+    }
+    public void setTakeTimeId(Long takeTimeId) {
+        this.takeTimeId = takeTimeId;
+    }
+    
+    //定区关联快递员 
+    @Action(value ="fixedAreaAction_associationCourierToFixedArea" ,results = {@Result(name = "success",
+            location = "/pages/base/fixed_area.html",
+            type = "redirect")})
+    public String associationCourierToFixedArea(){
+        fixedAreaService.associationCourierToFixedArea(getModel().getId(),courierId,takeTimeId);
         return SUCCESS;
     }
 }

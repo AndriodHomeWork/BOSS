@@ -1,5 +1,7 @@
 package com.itcast.bos.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,6 +23,12 @@ public interface CourierRepository extends JpaRepository<Courier, Long>,JpaSpeci
         @Modifying
         @Query("update Courier set deltag = 1 where id = ?")
         void updateDelTagById(long id);
+
+        
+       
+
+
+        List<Courier> findByDeltagIsNull();
 
 }
   

@@ -13,5 +13,7 @@ import com.itcast.bos.domain.base.FixedArea;
 @Repository
 public interface FixedAreaRepository extends JpaRepository<FixedArea, Long> {
 
+    
+
 }
   
