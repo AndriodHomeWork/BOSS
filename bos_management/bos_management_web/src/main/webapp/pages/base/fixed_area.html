@@ -31,9 +31,80 @@
 				$('#searchWindow').window("open");
 			}
 			
-			function doAssociations(){
-				$('#customerWindow').window('open');
+			//2.在页面显示数据
+		 	function doCustomerAssociations(){
+		 		//获取用户选了几条定区数据
+				var rows = $("#grid").datagrid("getSelections")
+					
+				if(rows.length == 1){
+					$('#customerWindow').window('open');
+					//清空节点中的数据
+					$("#noassociationSelect").empty();
+					$("#associationSelect").empty();
+					
+					
+					//发起请求查询未关联的客户
+					$.post("../../fixedAreaAction_findUnAssociatedCustomers.action",function(data){
+						for(var i=0;i<data.length;i++){
+							var id = data[i].id;
+							var username = data[i].username;
+							var telephone = data[i].telephone;
+							
+							$("#noassociationSelect").append("<option value='"+id+"'>" + username + "["+ telephone + "]</option>")
+						}
+					
+						
+					});
+					
+				// 获取定区的ID
+				var id=rows[0].id;
+				//发起请求查询已关联到当前定区的客户
+				$.post("../../fixedAreaAction_findAssociatedCustomers.action","id=" +id,function(data){
+					for(var i=0;i<data.length;i++){
+						var id = data[i].id;
+						var username = data[i].username;
+						var telephone = data[i].telephone;
+						
+						$("#associationSelect").append("<option value='"+id+"'>" + username + "["+ telephone + "]</option>")
+					}
+					
+				});
+			
+				}else{
+					$.messager.alert("提示", "您最多也只能选择一条数据进行操作", "warning")
+				}  
+			} 
+			
+			
+			//3.实现数据左右移动
+			function moveCustomer2Right(){
+				$("#associationSelect").append($("#noassociationSelect option:selected"))
 			}
+			
+			function moveCustomer2Left(){
+				$("#noassociationSelect").append($("#associationSelect option:selected"))
+			} 
+			 
+			function doAssociations(){
+				
+			}
+			
+			//提交表单，关联客户(①定区ID<注意html和Javabean和数据库中的名字需要相同才能赋值成功--id
+			//		②被选中的客户>)
+			function associateCustomer2FixedArea(){
+				
+				// 给定区ID赋值
+				var rows = $("#grid").datagrid("getSelections");
+				$("#customerFixedAreaId").val(rows[0].id)
+				
+				// 选中右侧的下拉框中所有的数据
+				$("#associationSelect option").attr("selected", "selected")
+				
+				
+				$("#customerForm").submit()
+			}			
+		
+			
 			
 			//工具栏
 			var toolbar = [ {
@@ -60,7 +131,7 @@
 				id : 'button-association',
 				text : '关联客户',
 				iconCls : 'icon-sum',
-				handler : doAssociations
+				handler : doCustomerAssociations
 			},{
 				id : 'button-association-courier',
 				text : '关联快递员',
@@ -112,6 +183,8 @@
 				align : 'center'
 			} ] ];
 			
+			
+			//一加载就把数据查询出来
 			$(function(){
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
@@ -257,6 +330,12 @@
 				});
 				
 			}
+			
+			function saveFixedArea(){
+				if ($("#fixedAreaForm").form("validate")) {
+					$("#fixedAreaForm").submit();
+				}
+			}
 		</script>
 	</head>
 
@@ -279,7 +358,7 @@
 		<div class="easyui-window" title="定区添加修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 			<div style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">
-					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" onclick="saveFixedArea()">保存</a>
 					</script>
 				</div>
 			</div>
@@ -367,16 +446,16 @@
 								<select id="noassociationSelect" multiple="multiple" size="10"></select>
 							</td>
 							<td>
-								<input type="button" value="》》" id="toRight">
+								<input type="button" value="》》" id="toRight" onclick="moveCustomer2Right()">
 								<br/>
-								<input type="button" value="《《" id="toLeft">
+								<input type="button" value="《《" id="toLeft" onclick="moveCustomer2Left()">
 							</td>
 							<td>
 								<select id="associationSelect" name="customerIds" multiple="multiple" size="10"></select>
 							</td>
 						</tr>
 						<tr>
-							<td colspan="3"><a id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a> </td>
+							<td colspan="3"><a id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="associateCustomer2FixedArea()" >关联客户</a> </td>
 						</tr>
 					</table>
 				</form>
@@ -398,7 +477,7 @@
 							<td>
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
-								<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
+								<input data-options="ditable:false, url:'',valueField:'id',textField:'name'"
 									 type="text" name="courierId" class="easyui-combobox" required="true" />
 							</td>
 						</tr>

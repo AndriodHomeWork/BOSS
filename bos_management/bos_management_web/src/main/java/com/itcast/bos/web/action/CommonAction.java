@@ -100,7 +100,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
      * @throws IOException
      */
 
-    public void list2json(List<T> list, JsonConfig jsonConfig) throws IOException {
+    public void list2json(List list, JsonConfig jsonConfig) throws IOException {
         String json;
         if (jsonConfig != null) {
             json = JSONArray.fromObject(list, jsonConfig).toString();
