@@ -32,7 +32,7 @@
 			}
 			
 			//2.在页面显示数据
-		 	function doCustomerAssociations(){
+	 	function doCustomerAssociations(){
 		 		//获取用户选了几条定区数据
 				var rows = $("#grid").datagrid("getSelections")
 					
@@ -76,7 +76,7 @@
 			} 
 			
 			
-			//3.实现数据左右移动
+		//3.实现数据左右移动
 			function moveCustomer2Right(){
 				$("#associationSelect").append($("#noassociationSelect option:selected"))
 			}
@@ -85,9 +85,7 @@
 				$("#noassociationSelect").append($("#associationSelect option:selected"))
 			} 
 			 
-			function doAssociations(){
-				
-			}
+			
 			
 			//提交表单，关联客户(①定区ID<注意html和Javabean和数据库中的名字需要相同才能赋值成功--id
 			//		②被选中的客户>)
@@ -104,6 +102,59 @@
 				$("#customerForm").submit()
 			}			
 		
+			
+			//定区关联分区
+			function doAssociations(){
+				//判断是否选中一个定区
+					var rows = $("#grid").datagrid('getSelections');
+				if(rows.length==1){
+					//打开分区窗口
+					$("#noassociationSubAreaSelect").html("");
+					$("#associationSubAreaSelect").html("");
+					
+					$("#subAreaWindow").window('open');
+					
+					//发起请求查询未关联的分区
+					$.post("../../subAreaAction_findUnAssociatedSubAreas.action",function(data){
+						//返回的是未关联定区的分区集合
+						for(var i=0;i<data.length;i++){
+							var id = data[i].id;
+							var keyWords = data[i].keyWords;
+							$("#noassociationSubAreaSelect").append("<option value='"+id+"'>" + keyWords + "</option>");
+						}
+						
+					});
+					
+					// 获取定区的ID
+					var id=rows[0].id;
+					//发起请求查询已关联到当前定区的分区 
+					$.post("../../subAreaAction_findAssociatedSubAreas.action",{"fixedAreaId":id},function(data){
+						//返回的是已经关联定区的分区集合
+						for(var i=0;i<data.length;i++){
+							var id = data[i].id;
+							var keyWords = data[i].keyWords;
+							
+							$("#associationSubAreaSelect").append("<option value='"+id+"'>" + keyWords + "</option>");
+						}
+					});
+					
+					
+					
+				}else{
+					// 没有选中定区，或者选择 了多个定区
+					$.messager.alert("警告","关联分区,只能（必须）选择一个定区","warning");
+				}
+			}
+			
+			//3.实现数据左右移动
+			function moveSubArea2Right(){
+				$("#associationSubAreaSelect").append($("#noassociationSubAreaSelect option:selected"))
+			}
+			
+			function moveSubArea2Left(){
+				$("#noassociationSubAreaSelect").append($("#associationSubAreaSelect option:selected"))
+			} 
+			 
 			
 			
 			//工具栏
@@ -138,7 +189,7 @@
 				iconCls : 'icon-sum',
 				handler : function(){
 					// 判断是否已经选中了一个定区，弹出关联快递员窗口 
-					var rows = $("#grid").datagrid('getSelections');
+				var rows = $("#grid").datagrid('getSelections');
 					if(rows.length==1){
 						// 只选择了一个定区
 						// 弹出定区关联快递员 窗口 
@@ -510,7 +561,63 @@
 				</form>
 			</div>
 		</div>
+		
+		<!-- 关联分区窗口 -->
+	<div modal="true" class="easyui-window" title="关联分区窗口"
+		id="subAreaWindow" collapsible="false" closed="true"
+		minimizable="false" maximizable="false"
+		style="top: 20px; left: 200px; width: 400px; height: 300px;">
+		<div style="overflow: auto; padding: 5px;" border="false">
+			<form id="subAreaForm"
+				action="../../fixedAreaAction_assignSubAreas2FixedArea.action"
+				method="post">
+				<table class="table-edit" width="80%" align="center">
+					<tr class="title">
+						<td colspan="3">关联分区</td>
+					</tr>
+					<tr>
+						<td><input type="hidden" name="id" id="subAreaFixedAreaId" />
+							<!-- size: 指定一次可以显示多少条数据  --> <!-- multiple: 可以选择多条数据--> <select
+							id="noassociationSubAreaSelect" multiple="multiple" size="10">
+
+
+						</select></td>
+						<td><input type="button" value="》》" id="toRight"
+							onclick="moveSubArea2Right()"> <br /> <input
+							type="button" value="《《" id="toLeft" onclick="moveSubArea2Left()"></td>
+						<td><select id="associationSubAreaSelect" name="subAreaIds"
+							multiple="multiple" size="10"></select></td>
+					</tr>
+					<tr>
+						<td colspan="3"><a id="associationBtn" href="#"
+							onclick="associateSubArea2FixedArea()" class="easyui-linkbutton"
+							data-options="iconCls:'icon-save'">关联分区</a></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+		
+		
+		<script type="text/javascript">
+			function associateSubArea2FixedArea(){
+				
+				
+				// 给定区ID赋值
+				var rows = $("#grid").datagrid("getSelections");
+				$("#subAreaFixedAreaId").val(rows[0].id)
+				
+				// 选中右侧的下拉框中所有的数据
+				$("#associationSubAreaSelect option").attr("selected", "selected")
+
+				// 提交表单
+				$("#subAreaForm").submit();
+			}
+		</script>
 	</body>
+	
+	
+
 <script type="text/javascript">
 	function associateCourier(){
 		

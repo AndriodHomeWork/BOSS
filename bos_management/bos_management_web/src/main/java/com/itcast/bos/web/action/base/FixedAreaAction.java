@@ -143,5 +143,28 @@ public class FixedAreaAction  extends CommonAction<FixedArea>{
         fixedAreaService.associationCourierToFixedArea(getModel().getId(),courierId,takeTimeId);
         return SUCCESS;
     }
+    
+    
+    //模型驱动接收定区ID
+   
+    //属性驱动接受穿过的分区ID集合
+    private Long[] subAreaIds;
+    
+    public void setSubAreaIds(Long[] subAreaIds) {
+        this.subAreaIds = subAreaIds;
+    }
+   
+    //关联分区
+    @Action(value = "fixedAreaAction_assignSubAreas2FixedArea",
+            results = {@Result(name = "success",
+                    location = "/pages/base/fixed_area.html",
+                    type = "redirect")})
+    public String assignSubAreas2FixedArea() {
+        //将定区所有的关联分区解绑
+        //关联传过来的分区
+        fixedAreaService.assignSubAreas2FixedArea(getModel().getId(),subAreaIds);
+           
+        return SUCCESS;
+    }
 }
   

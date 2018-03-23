@@ -1,5 +1,9 @@
 package com.itcast.bos.service.impl;
 
+import java.util.Set;
+
+import javax.persistence.OneToMany;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itcast.bos.dao.CourierRepository;
 import com.itcast.bos.dao.FixedAreaRepository;
+import com.itcast.bos.dao.SubareaRepository;
 import com.itcast.bos.dao.TakeTimeRepository;
 import com.itcast.bos.domain.base.Courier;
 import com.itcast.bos.domain.base.FixedArea;
+import com.itcast.bos.domain.base.SubArea;
 import com.itcast.bos.domain.base.TakeTime;
 import com.itcast.bos.service.FixedAreaService;
 
@@ -29,6 +35,8 @@ public class fixedAreaServiceImpl implements FixedAreaService {
     @Autowired
     private TakeTimeRepository takeTimeRepository;
 
+    @Autowired
+    private SubareaRepository subareaRepository;
     @Override
     public void save(FixedArea fixedArea) {
           
@@ -67,6 +75,29 @@ public class fixedAreaServiceImpl implements FixedAreaService {
        // courier.getFixedAreas().add(fixedArea);
         
     
+        
+    }
+
+ // 关联分区到指定的定区
+    @Override
+    public void assignSubAreas2FixedArea(Long fixedAreaId, Long[] subAreaIds) {
+     // 关系是由分区在维护-- @OneToMany(mappedBy = "fixedArea")
+     // 先解绑，把当前定区绑定的所有分区全部解绑
+      
+        FixedArea fixedArea = fixedAreaRepository.findOne(fixedAreaId);
+        Set<SubArea> subareas = fixedArea.getSubareas();
+        
+        //取消本定区所有的分区的定区属性
+        for (SubArea subArea : subareas) {
+            subArea.setFixedArea(null);
+        }
+        
+        // 再绑定
+        for (Long subAreaId : subAreaIds) {
+            SubArea subArea = subareaRepository.findOne(subAreaId);
+            subArea.setFixedArea(fixedArea);
+        }
+        
         
     }
 }
