@@ -3,6 +3,7 @@ package com.itcast.bos.service.impl;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +50,7 @@ public class courierServiceImpl implements CourierService {
         return  courierRepository.findAll(specification,pageable);
     }
 
+    @RequiresPermissions("batchDel")
     @Override
     public void batchDel(String ids) {
         // 真实开发中只有逻辑删除

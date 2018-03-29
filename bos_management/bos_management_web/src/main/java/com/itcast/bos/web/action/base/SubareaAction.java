@@ -89,8 +89,6 @@ public class SubareaAction extends CommonAction<SubArea> {
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[]{"subareas","couriers"});
         list2json(list, jsonConfig);
-        
-       
        
         return NONE;
     }

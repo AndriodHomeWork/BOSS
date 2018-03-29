@@ -29,7 +29,7 @@ public class SmsUtils {
     static final String accessKeyId = "LTAI5Nt6YhOUwb73";
     static final String accessKeySecret = "AcEr0apH5v43kf1Ai0c87bHiaMt751";
 
-    public static SendSmsResponse sendSms(String phoneNum, String code) throws ClientException {
+    public static SendSmsResponse sendSms(String telephone, String code) throws ClientException {
 
         // 可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -43,7 +43,7 @@ public class SmsUtils {
         // 组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         // 必填:待发送手机号
-        request.setPhoneNumbers("18390581809");
+        request.setPhoneNumbers(telephone);
         // 必填:短信签名-可在短信控制台中找到
         request.setSignName("元元TY");
         // 必填:短信模板-可在短信控制台中找到
@@ -77,7 +77,7 @@ public class SmsUtils {
         // 组装请求对象
         QuerySendDetailsRequest request = new QuerySendDetailsRequest();
         // 必填-号码
-        request.setPhoneNumber("15273861251");
+        request.setPhoneNumber("150000000000");
         // 可选-流水号
         request.setBizId(bizId);
         // 必填-发送日期 支持30天内记录查询，格式yyyyMMdd

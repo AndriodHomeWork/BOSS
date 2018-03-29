@@ -147,10 +147,10 @@
 			};
 			// 退出登录
 			function logoutFun() {
-				$.messager
-				.confirm('系统提示','您确定要退出本次登录吗?',function(isConfirm) {
+				
+			$.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(isConfirm) {
 					if (isConfirm) {
-						location.href = './login.html';
+						location.href = 'userAction_logout.action';
 					}
 				});
 			}
@@ -159,8 +159,9 @@
 				$('#editPwdWindow').window('open');
 			}
 			// 版权信息
-			function showAbout(){
-				$.messager.alert("bos v2.0综合物流管理平台","设计: 传智播客<br/> 管理员邮箱: itcast_search@163.com <br/>");
+			function showAbout() {
+				$.messager.alert("bos v2.0综合物流管理平台",
+						"设计: 传智播客<br/> 管理员邮箱: itcast_search@163.com <br/>");
 			}
 		</script>
 	</head>
