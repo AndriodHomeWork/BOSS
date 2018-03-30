@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itcast.bos.dao.system.MenuRepository;
 import com.itcast.bos.domain.system.Menu;
+import com.itcast.bos.domain.system.User;
 import com.itcast.bos.service.system.MenuService;
 
 /**  
@@ -45,6 +46,19 @@ public class MenuServiceImpl implements MenuService {
           
         
         return menuRepository.findAll(pageable);
+    }
+    
+    
+    
+    @Override
+    public List<Menu> findbyUser(User user) {
+          
+        //如果当前用户是admin
+        if("admin".equals(user.getUsername())) {
+            return menuRepository.findAll();
+        }
+        
+        return menuRepository.findbyUser(user.getId());
     }
 
 }

@@ -3,6 +3,9 @@ package com.itcast.bos.web.action.system;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import com.itcast.bos.domain.system.Menu;
+import com.itcast.bos.domain.system.User;
 import com.itcast.bos.service.system.MenuService;
 import com.itcast.bos.web.action.CommonAction;
 
@@ -77,6 +81,24 @@ public class MenuAction extends CommonAction<Menu> {
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"roles","childrenMenus","parentMenu"});
         page2json(page, jsonConfig);
+        return NONE;
+    }
+    
+  //动态加载菜单（用户不同看到的菜单栏目也不同）
+    @Action(value="menuAction_findbyUser")
+    public String findbyUser() throws IOException {
+        // 获取当前用户
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        
+       List<Menu> list=  menuService.findbyUser(user);
+       JsonConfig jsonConfig = new JsonConfig();
+       //net.sf.json.JSONException: There is a cycle in the hierarchy!
+       //所以把parentMenu也忽略掉
+       
+       jsonConfig.setExcludes(new String[] {"roles","childrenMenus","parentMenu","children"});//还需要在Action中的方法中多忽略一个字段"children"
+       list2json(list, jsonConfig);
+        
         return NONE;
     }
 

@@ -52,7 +52,20 @@ public class Menu implements Serializable {
     public Set<Menu> getChildren() {// 发生懒加载异常,解决的方式就是在Menu实体类中增加属性,把需要的数据查询出来
         return childrenMenus;
     }
+   
+    //根据用户动态加载菜单树
+    // 返回的数据最终是由ztree加载的,这种数据格式是标准json,导致树上的数据是重复的.
+    //所以需要返回简单json的数据,简单的json需要pId属性,在Menu实体中增加方法
+    public Long getpId() {
+        // 一级菜单
+        if (parentMenu == null) {
+            return 0L;
+        }
 
+        return parentMenu.getId();
+    }
+
+    
     public Long getId() {
         return id;
     }
