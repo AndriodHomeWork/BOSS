@@ -15,9 +15,17 @@
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.portal.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		
+		<script src="../../js/highcharts/highcharts.js"></script>
+		<script src="../../js/highcharts/modules/exporting.js"></script>
+		<script src="../../js/highcharts/highcharts-zh_CN.js"></script>
+		
 		<!-- 导入一键ocupload上传插件 -->
 		<script type="text/javascript" src="../../js/jquery.ocupload-1.1.2.js"></script>
 		<script type="text/javascript">
+		
+		
+
 			function doAdd(){
 				$('#addWindow').window("open");
 			}
@@ -57,7 +65,13 @@
 				text : '导出Excel',
 				iconCls : 'icon-redo',
 				handler : doExportExcel
-			}];
+			},{
+				id : 'button-export',
+				text : '导出图表',
+				iconCls : 'icon-undo',
+				handler : doExportCharts
+			}
+			];
 			// 定义列
 			var columns = [ [ {
 				field : 'id',
@@ -95,6 +109,17 @@
 			} ] ];
 			
 			$(function(){
+				/* 隐藏窗口 */
+				$('#chartWindow').window({
+					width : 700,
+					modal : true,
+					shadow : true,
+					closed : true,
+					height : 600,
+					resizable : false
+				});
+
+				
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
 				
@@ -144,12 +169,45 @@
 				window.location.href="../../areaAction_exportExcel.action"
 			}
 
+			
+			//导出HighCharts图表
+			function doExportCharts() {
+				// 打开窗口
+				$('#chartWindow').window("open")
+				// 按照省份进行统计区域数据 [[]]  List<Object[]>
+				//发起请求查询数据
+				$.post("../../areaAction_exportCharts.action", function(data) {
+					// 加载HighCharts
+					$('#container').highcharts({
+
+						title : {
+							text : '各省区域数据占比'
+						},
+
+						series : [ {
+							type : 'pie',
+							name : '各省区域数据占比',
+							data : data
+						} ]
+					});
+				})
+			}
+
 		</script>
 		
 		
 	</head>
 
 	<body class="easyui-layout" style="visibility:hidden;">
+	
+	<!-- 添加窗口 -->
+	<div class="easyui-window" title="区域分布图" id="chartWindow"
+		collapsible="false" minimizable="false" maximizable="false"
+		style="top: 20px; left: 200px">
+		<div id="container"></div>
+	</div>
+	
+	
 		<div region="center" border="false">
 			<table id="grid"></table>
 		</div>

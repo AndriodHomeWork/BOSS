@@ -138,7 +138,7 @@
 				拦截的规则执行的时候是从上往下执行的,一旦有一个规则匹配成功,后面的规则就不再执行了
 				拦截的规则不可以折行
 			-->
-			<value>
+			<!-- <value>
 
 			 /css/* = anon
 				/data/* = anon
@@ -149,7 +149,12 @@
 				/courierAction_pageQuery.action = perms["courierAction_pageQuery"]
 				/hi.html = perms["courierAction_pageQuery"]
 				/** = authc
+			</value> -->
+			
+			<value>
+				/** = anon
 			</value>
+			
 		</property>
 	
 	</bean>
@@ -207,7 +212,19 @@
 		</property>
 	</bean>
 
-
+<!--发布宣传任务分页的WebService -->
+	<!--发布订单的WebService -->
+	<jaxrs:server address="/promotionService">
+		<jaxrs:serviceBeans>
+			<ref bean="promotionServiceImpl" />
+		</jaxrs:serviceBeans>
+		<jaxrs:inInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingInInterceptor"></bean>
+		</jaxrs:inInterceptors>
+		<jaxrs:outInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"></bean>
+		</jaxrs:outInterceptors>
+	</jaxrs:server>
 	
 	
 	
